@@ -185,7 +185,7 @@ tools_metadata = \
 	tools/metadata/metadata.ml
 
 tools = \
-	tools/log.ml tools/pos.ml \
+	tools/pcre_compat.ml tools/log.ml tools/pos.ml \
 	tools/extralib.ml tools/lifecycle.ml \
 	tools/stringView.ml tools/strings.ml tools/utils.ml \
 	tools/runtime_error.ml \
