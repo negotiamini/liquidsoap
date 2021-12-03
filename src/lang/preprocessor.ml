@@ -163,11 +163,17 @@ let expand_string tokenizer =
   let add pos x = Queue.add (x, pos) state in
   let pop () = ignore (Queue.take state) in
   let parse s pos =
-    let l = Pcre_compat.split ~pat:"#\\{([^}]*?)\\}" s in
-    let l = if l = [] then [""] else l in
+    let rex = Re.Pcre.regexp "#\\{([^\\}]*?)\\}" in
+    let l = Re.Pcre.full_split ~rex s in
+    let l = if l = [] then [Re.Pcre.Text s] else l in
     let add = add pos in
     let rec parse = function
-      | s :: x :: l ->
+      | [Re.Pcre.Text x] -> add (String x)
+      | Re.Pcre.Text x :: l ->
+          add (String x);
+          add Concat;
+          parse l
+      | Re.Pcre.Delim _ :: Re.Pcre.Group (_, x) :: l ->
           let lexbuf = Sedlexing.Utf8.from_string x in
           let tokenizer = mk_tokenizer lexbuf in
           let tokenizer () = (fst (tokenizer ()), pos) in
@@ -176,8 +182,7 @@ let expand_string tokenizer =
           if l <> [] then (
             add Concat;
             parse l)
-      | [x] -> add (String x)
-      | [] -> assert false
+      | _ -> assert false
     in
     parse l
   in
@@ -340,7 +345,7 @@ let parse_comments tokenizer =
                       | [] -> raise Not_found
                       | line :: lines ->
                           let line =
-                            Pcre_compat.substitute ~pat:"^ *"
+                            Pcre_compat.substitute ~pat:"^ \\*"
                               ~subst:(fun _ -> "")
                               line
                           in
