@@ -2,7 +2,7 @@
 
 INCDIRS = tools lang
 
-ML  = tools/pos.ml tools/runtime_error.ml
+ML  = tools/pos.ml tools/runtime_error.ml lang/type.ml
 ML := $(addprefix ../,$(ML))
 MLI = $(shell ls -fd $(ML:.ml=.mli) 2> /dev/null)
 CMI = $(MLI:.mli=.cmi)
@@ -12,13 +12,14 @@ OCAMLCOMP = OCAMLC
 OCAMLC = ocamlfind ocamlopt
 OCAML_CFLAGS := $(addprefix -I ../,$(INCDIRS))
 OCAML_LFLAGS := -g -linkpkg
+V = @
 
 lang: $(CMI) $(CMX)
 	$(V)echo Generate $@...
 	$(V)$(OCAMLC) -o $@ $(OCAML_CFLAGS) $(OCAML_LFLAGS) $(CMX)
 
 clean:
-	rm -f $(CMI) $(CMX)
+	rm -f $(ML:.ml=.cmi) $(CMX)
 
 %.cmi: %.mli
 	$(V)echo $(OCAMLCOMP) -c $<
