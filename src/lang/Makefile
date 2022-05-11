@@ -2,7 +2,7 @@
 
 INCDIRS = tools lang
 
-ML  = tools/pos.ml tools/runtime_error.ml lang/type.ml
+ML  = tools/pos.ml tools/runtime_error.ml lang/type.ml lang/repr.ml
 ML := $(addprefix ../,$(ML))
 MLI = $(shell ls -fd $(ML:.ml=.mli) 2> /dev/null)
 CMI = $(MLI:.mli=.cmi)

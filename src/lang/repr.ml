@@ -255,9 +255,9 @@ let print f t =
     | `Constr ("none", _) ->
         Format.fprintf f "none";
         vars
-    | `Constr (_, [(_, `Ground (Format format))]) ->
-        Format.fprintf f "%s" (Content.string_of_format format);
-        vars
+        (* | `Constr (_, [(_, `Ground (Format format))]) -> *)
+        (* Format.fprintf f "%s" (Content.string_of_format format); *)
+        (* vars *)
     | `Constr (name, params) ->
         Format.open_box (1 + String.length name);
         Format.fprintf f "%s(" name;
